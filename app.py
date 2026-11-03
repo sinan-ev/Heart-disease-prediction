@@ -148,7 +148,7 @@ with st.sidebar:
     st.markdown("## ⚙️ Settings")
     st.markdown("---")
 
-    model_choice = st.radio(
+    model_choice = st.selectbox(
         "Select Prediction Model",
         list(MODEL_PATHS.keys()),
         index=0,
@@ -212,7 +212,8 @@ with col_form:
         with st.expander("👤 Patient Demographics", expanded=True):
             age = st.slider("Age", min_value=1, max_value=100, value=45,
                             help="Patient age in years")
-            sex_label = st.radio("Sex", ["Male", "Female"], horizontal=True)
+            sex_label = st.selectbox("Sex", ["Male", "Female"],
+                                     help="Biological sex of the patient")
             sex = 1 if sex_label == "Male" else 0
 
         # ── Cardiac Indicators ─────────────────────────────────────────────────
