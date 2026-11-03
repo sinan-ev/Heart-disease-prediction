@@ -324,7 +324,7 @@ with col_results:
 
                 # ── Probability bar ────────────────────────────────────────
                 st.markdown(f"**Risk Probability: {risk_pct:.1f}%**")
-                st.progress(min(int(risk_pct), 100))
+                st.progress(min(risk_pct / 100.0, 1.0))
 
                 # ── Gauge chart ────────────────────────────────────────────
                 fig_gauge = go.Figure(go.Indicator(
@@ -390,7 +390,7 @@ with col_results:
                     return "background-color: #0d3b1e; color: #2ecc71; font-weight: bold;"
 
                 st.dataframe(
-                    risk_df.style.applymap(style_status, subset=["Status"]),
+                    risk_df.style.map(style_status, subset=["Status"]),
                     use_container_width=True,
                     hide_index=True,
                 )
