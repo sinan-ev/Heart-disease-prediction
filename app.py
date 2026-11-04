@@ -9,7 +9,7 @@ import os
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="HeartGuard AI",
-    page_icon="❤️",
+    page_icon="heart",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -17,87 +17,73 @@ st.set_page_config(
 # ── Custom CSS ────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-/* Header banner */
+/* ── Global font & background ── */
+html, body, [class*="css"] {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* ── Header banner ── */
 .header-banner {
-    background: linear-gradient(135deg, #8b0000 0%, #c0392b 40%, #e74c3c 100%);
+    background: linear-gradient(135deg, #1a3a5c 0%, #1e5f8e 60%, #2980b9 100%);
     padding: 2rem 2.5rem;
-    border-radius: 16px;
+    border-radius: 14px;
     margin-bottom: 1.5rem;
-    box-shadow: 0 8px 32px rgba(231,76,60,0.35);
+    box-shadow: 0 6px 24px rgba(41, 128, 185, 0.25);
 }
 .header-banner h1 {
     color: #ffffff;
-    font-size: 2.8rem;
+    font-size: 2.4rem;
     font-weight: 800;
     margin: 0;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 .header-banner p {
-    color: rgba(255,255,255,0.85);
-    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 1.05rem;
     margin: 0.4rem 0 0 0;
 }
 
-/* Card containers */
-.card {
-    background: #161b22;
-    border-radius: 12px;
-    padding: 1.4rem 1.6rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-    border: 1px solid #30363d;
-}
-
-/* Result boxes */
-.result-safe {
-    background: linear-gradient(135deg, #0d3b1e, #145a32);
-    border: 2px solid #27ae60;
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
-    color: #2ecc71;
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 20px rgba(39,174,96,0.25);
-}
-.result-risk {
-    background: linear-gradient(135deg, #3b0d0d, #5a1414);
-    border: 2px solid #e74c3c;
-    border-radius: 12px;
-    padding: 1.5rem;
-    text-align: center;
-    color: #e74c3c;
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 20px rgba(231,76,60,0.25);
-}
-
-/* Sidebar */
-[data-testid="stSidebar"] {
-    background: #0d1117;
-    border-right: 1px solid #30363d;
-}
-[data-testid="stSidebar"] .stRadio label {
-    color: #f0f6fc;
-}
-
-/* Section headers */
+/* ── Section headings ── */
 .section-header {
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 700;
-    color: #e63946;
+    color: #2980b9;
     margin-bottom: 0.5rem;
-    border-bottom: 1px solid #30363d;
+    border-bottom: 1px solid #dde3ea;
     padding-bottom: 0.3rem;
 }
 
-/* Risk indicator badges */
+/* ── Result boxes ── */
+.result-safe {
+    background: #eaf7ee;
+    border: 2px solid #27ae60;
+    border-radius: 12px;
+    padding: 1.4rem 1.6rem;
+    text-align: center;
+    color: #1a7a40;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    box-shadow: 0 3px 14px rgba(39, 174, 96, 0.15);
+}
+.result-risk {
+    background: #fef0ee;
+    border: 2px solid #e74c3c;
+    border-radius: 12px;
+    padding: 1.4rem 1.6rem;
+    text-align: center;
+    color: #c0392b;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    box-shadow: 0 3px 14px rgba(231, 76, 60, 0.15);
+}
+
+/* ── Badges ── */
 .badge-safe {
     display: inline-block;
-    background: #145a32;
-    color: #2ecc71;
+    background: #d5f5e3;
+    color: #1a7a40;
     border-radius: 20px;
     padding: 2px 12px;
     font-size: 0.82rem;
@@ -105,8 +91,8 @@ st.markdown("""
 }
 .badge-risk {
     display: inline-block;
-    background: #5a1414;
-    color: #e74c3c;
+    background: #fce8e6;
+    color: #c0392b;
     border-radius: 20px;
     padding: 2px 12px;
     font-size: 0.82rem;
@@ -119,12 +105,12 @@ st.markdown("""
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 MODEL_PATHS = {
-    "Random Forest 🌳": os.path.join(BASE_DIR, "random_forest_model.pkl"),
-    "Gradient Boosting 🚀": os.path.join(BASE_DIR, "gradient_boosting_model.pkl"),
-    "XGBoost ⚡": os.path.join(BASE_DIR, "xgboost_model.pkl"),
+    "Random Forest":       os.path.join(BASE_DIR, "random_forest_model.pkl"),
+    "Gradient Boosting":   os.path.join(BASE_DIR, "gradient_boosting_model.pkl"),
+    "XGBoost":             os.path.join(BASE_DIR, "xgboost_model.pkl"),
 }
 SCALER_PATH = os.path.join(BASE_DIR, "scaler.pkl")
-DATA_PATH = os.path.join(BASE_DIR, "heart_disease_uci.csv")
+DATA_PATH   = os.path.join(BASE_DIR, "heart_disease_uci.csv")
 
 # ── Session state ─────────────────────────────────────────────────────────────
 if "history" not in st.session_state:
@@ -145,7 +131,7 @@ def load_data(path: str):
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("## ⚙️ Settings")
+    st.markdown("## Settings")
     st.markdown("---")
 
     model_choice = st.selectbox(
@@ -157,17 +143,17 @@ with st.sidebar:
     st.markdown("---")
 
     try:
-        model = load_model(MODEL_PATHS[model_choice])
+        model  = load_model(MODEL_PATHS[model_choice])
         scaler = load_scaler(SCALER_PATH)
-        st.success(f"Model loaded ✓")
+        st.success("Model loaded successfully")
     except Exception as exc:
         st.error(f"Model load error: {exc}")
-        model = None
+        model  = None
         scaler = None
 
     st.markdown("---")
 
-    with st.expander("ℹ️ About"):
+    with st.expander("About"):
         st.markdown("""
 **HeartGuard AI** uses machine learning to assess heart disease risk based on clinical indicators.
 
@@ -180,7 +166,7 @@ Three ensemble models are available:
         """)
 
     st.markdown("---")
-    st.markdown("### 🕑 Prediction History")
+    st.markdown("### Prediction History")
     if st.session_state["history"]:
         hist_df = pd.DataFrame(st.session_state["history"][-5:])
         st.dataframe(hist_df[["model", "result", "risk_pct"]].rename(
@@ -192,7 +178,7 @@ Three ensemble models are available:
 # ── Header ────────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="header-banner">
-  <h1>❤️ HeartGuard AI</h1>
+  <h1>HeartGuard AI</h1>
   <p>Clinical Heart Disease Risk Assessment powered by Machine Learning</p>
 </div>
 """, unsafe_allow_html=True)
@@ -204,12 +190,12 @@ col_form, col_results = st.columns([1.6, 1], gap="large")
 # LEFT COLUMN — Input Form
 # ═══════════════════════════════════════════════════════════════════════════════
 with col_form:
-    st.markdown("### 📝 Patient Information")
+    st.markdown("### Patient Information")
 
     with st.form("input_form"):
 
         # ── Demographics ───────────────────────────────────────────────────────
-        with st.expander("👤 Patient Demographics", expanded=True):
+        with st.expander("Patient Demographics", expanded=True):
             age = st.slider("Age", min_value=1, max_value=100, value=45,
                             help="Patient age in years")
             sex_label = st.selectbox("Sex", ["Male", "Female"],
@@ -217,7 +203,7 @@ with col_form:
             sex = 1 if sex_label == "Male" else 0
 
         # ── Cardiac Indicators ─────────────────────────────────────────────────
-        with st.expander("🫀 Cardiac Indicators", expanded=True):
+        with st.expander("Cardiac Indicators", expanded=True):
             cp = st.selectbox(
                 "Chest Pain Type",
                 options=[0, 1, 2, 3],
@@ -244,7 +230,7 @@ with col_form:
             )
 
         # ── Exercise Data ──────────────────────────────────────────────────────
-        with st.expander("🏃 Exercise Data", expanded=True):
+        with st.expander("Exercise Data", expanded=True):
             thalach = st.slider("Max Heart Rate Achieved",
                                 min_value=60, max_value=250, value=150)
             exang = st.checkbox("Exercise Induced Angina")
@@ -274,7 +260,7 @@ with col_form:
             )
 
         submitted = st.form_submit_button(
-            "🔍 Analyze Heart Health",
+            "Analyze Heart Health",
             use_container_width=True,
             type="primary",
         )
@@ -283,13 +269,13 @@ with col_form:
 # RIGHT COLUMN — Results
 # ═══════════════════════════════════════════════════════════════════════════════
 with col_results:
-    st.markdown("### 📊 Risk Assessment")
+    st.markdown("### Risk Assessment")
 
     if not submitted:
-        st.info("👈 Fill in the patient details and click **Analyze Heart Health** to see results.")
+        st.info("Fill in the patient details on the left and click **Analyze Heart Health** to see results.")
     else:
         if model is None or scaler is None:
-            st.error("Model or scaler not loaded. Check sidebar for errors.")
+            st.error("Model or scaler not loaded. Check the sidebar for errors.")
         else:
             # Build feature array
             features = np.array([[
@@ -304,7 +290,7 @@ with col_results:
 
                 # Probability
                 if hasattr(model, "predict_proba"):
-                    proba = model.predict_proba(features_scaled)[0]
+                    proba    = model.predict_proba(features_scaled)[0]
                     risk_pct = float(proba[1]) * 100
                 else:
                     risk_pct = 100.0 if int(prediction) == 1 else 0.0
@@ -312,14 +298,14 @@ with col_results:
                 # ── Result banner ──────────────────────────────────────────
                 if int(prediction) == 0:
                     st.markdown(
-                        '<div class="result-safe">✅ LOW RISK<br>'
-                        '<small>No significant heart disease indicators</small></div>',
+                        '<div class="result-safe">LOW RISK<br>'
+                        '<small>No significant heart disease indicators detected</small></div>',
                         unsafe_allow_html=True,
                     )
                 else:
                     st.markdown(
-                        '<div class="result-risk">⚠️ HIGH RISK<br>'
-                        '<small>Heart disease indicators detected</small></div>',
+                        '<div class="result-risk">HIGH RISK<br>'
+                        '<small>Heart disease indicators detected — consult a physician</small></div>',
                         unsafe_allow_html=True,
                     )
 
@@ -333,62 +319,62 @@ with col_results:
                     value=risk_pct,
                     delta={"reference": 50, "valueformat": ".1f"},
                     number={"suffix": "%", "valueformat": ".1f"},
-                    title={"text": "Heart Disease Risk Score", "font": {"size": 16}},
+                    title={"text": "Heart Disease Risk Score", "font": {"size": 16, "color": "#2c3e50"}},
                     gauge={
                         "axis": {"range": [0, 100], "tickwidth": 1,
-                                 "tickcolor": "#f0f6fc"},
-                        "bar": {"color": "#e63946", "thickness": 0.25},
-                        "bgcolor": "#161b22",
-                        "borderwidth": 2,
-                        "bordercolor": "#30363d",
+                                 "tickcolor": "#7f8c8d"},
+                        "bar": {"color": "#2980b9", "thickness": 0.25},
+                        "bgcolor": "#f9fbfd",
+                        "borderwidth": 1,
+                        "bordercolor": "#dde3ea",
                         "steps": [
-                            {"range": [0, 40], "color": "#0d3b1e"},
-                            {"range": [40, 70], "color": "#3b3000"},
-                            {"range": [70, 100], "color": "#3b0d0d"},
+                            {"range": [0,  40], "color": "#d5f5e3"},
+                            {"range": [40, 70], "color": "#fef9e7"},
+                            {"range": [70, 100], "color": "#fce8e6"},
                         ],
                         "threshold": {
-                            "line": {"color": "#f0f6fc", "width": 3},
+                            "line": {"color": "#2c3e50", "width": 3},
                             "thickness": 0.75,
                             "value": risk_pct,
                         },
                     },
                 ))
                 fig_gauge.update_layout(
-                    paper_bgcolor="#0d1117",
-                    font_color="#f0f6fc",
+                    paper_bgcolor="#ffffff",
+                    font_color="#2c3e50",
                     height=300,
                     margin=dict(l=20, r=20, t=60, b=20),
                 )
                 st.plotly_chart(fig_gauge, use_container_width=True)
 
                 # ── Risk factor summary ────────────────────────────────────
-                st.markdown("#### 🔎 Risk Factor Summary")
+                st.markdown("#### Risk Factor Summary")
 
                 risk_factors = {
-                    "Age": (age, age > 60, f"{age} yrs", "> 60 yrs"),
-                    "Cholesterol": (chol, chol > 240, f"{chol} mg/dL", "> 240 mg/dL"),
-                    "Resting BP": (trestbps, trestbps > 140, f"{trestbps} mmHg", "> 140 mmHg"),
-                    "Max Heart Rate": (thalach, thalach < 100, f"{thalach} bpm", "< 100 bpm"),
-                    "ST Depression": (oldpeak, oldpeak > 2.0, f"{oldpeak}", "> 2.0"),
-                    "Exercise Angina": (int(exang), exang, "Yes" if exang else "No", "Yes"),
+                    "Age":             (age,         age > 60,       f"{age} yrs",       "> 60 yrs"),
+                    "Cholesterol":     (chol,        chol > 240,     f"{chol} mg/dL",    "> 240 mg/dL"),
+                    "Resting BP":      (trestbps,    trestbps > 140, f"{trestbps} mmHg", "> 140 mmHg"),
+                    "Max Heart Rate":  (thalach,     thalach < 100,  f"{thalach} bpm",   "< 100 bpm"),
+                    "ST Depression":   (oldpeak,     oldpeak > 2.0,  f"{oldpeak}",       "> 2.0"),
+                    "Exercise Angina": (int(exang),  exang,          "Yes" if exang else "No", "Yes"),
                 }
 
                 rows = []
                 for factor, (val, is_risky, display, threshold) in risk_factors.items():
                     status = "Risky" if is_risky else "Normal"
                     rows.append({
-                        "Factor": factor,
-                        "Value": display,
+                        "Factor":    factor,
+                        "Value":     display,
                         "Threshold": threshold,
-                        "Status": status,
+                        "Status":    status,
                     })
 
                 risk_df = pd.DataFrame(rows)
 
                 def style_status(val):
                     if val == "Risky":
-                        return "background-color: #3b0d0d; color: #e74c3c; font-weight: bold;"
-                    return "background-color: #0d3b1e; color: #2ecc71; font-weight: bold;"
+                        return "background-color: #fce8e6; color: #c0392b; font-weight: bold;"
+                    return "background-color: #d5f5e3; color: #1a7a40; font-weight: bold;"
 
                 st.dataframe(
                     risk_df.style.map(style_status, subset=["Status"]),
@@ -397,13 +383,12 @@ with col_results:
                 )
 
                 # ── Save to history ────────────────────────────────────────
-                model_short = " ".join(model_choice.split(" ")[:2])
                 st.session_state["history"].append({
-                    "model": model_short,
-                    "result": "High Risk" if int(prediction) == 1 else "Low Risk",
+                    "model":    model_choice,
+                    "result":   "High Risk" if int(prediction) == 1 else "Low Risk",
                     "risk_pct": f"{risk_pct:.1f}%",
-                    "age": age,
-                    "chol": chol,
+                    "age":      age,
+                    "chol":     chol,
                 })
 
             except Exception as exc:
@@ -414,7 +399,7 @@ with col_results:
 # ═══════════════════════════════════════════════════════════════════════════════
 st.markdown("---")
 tab_data, tab_how, tab_disclaimer = st.tabs(
-    ["📊 Dataset Stats", "🧠 How It Works", "📋 Medical Disclaimer"]
+    ["Dataset Stats", "How It Works", "Medical Disclaimer"]
 )
 
 with tab_data:
@@ -429,7 +414,6 @@ with tab_data:
             st.dataframe(df.describe().round(2), use_container_width=True)
 
         with col_d2:
-            # Age distribution histogram
             age_col = None
             for c in ["age", "Age"]:
                 if c in df.columns:
@@ -440,18 +424,15 @@ with tab_data:
                 fig_age = px.histogram(
                     df, x=age_col, nbins=20,
                     title="Age Distribution",
-                    color_discrete_sequence=["#e63946"],
-                    template="plotly_dark",
+                    color_discrete_sequence=["#2980b9"],
+                    template="simple_white",
                 )
                 fig_age.update_layout(
-                    paper_bgcolor="#0d1117",
-                    plot_bgcolor="#161b22",
                     margin=dict(l=10, r=10, t=40, b=10),
                     height=320,
                 )
                 st.plotly_chart(fig_age, use_container_width=True)
 
-        # Target distribution bar chart
         target_col = None
         for c in ["target", "num", "condition"]:
             if c in df.columns:
@@ -468,12 +449,10 @@ with tab_data:
                 target_counts, x="Label", y="Count",
                 title="Target Variable Distribution",
                 color="Label",
-                color_discrete_map={"Heart Disease": "#e63946", "No Disease": "#27ae60"},
-                template="plotly_dark",
+                color_discrete_map={"Heart Disease": "#e74c3c", "No Disease": "#27ae60"},
+                template="simple_white",
             )
             fig_target.update_layout(
-                paper_bgcolor="#0d1117",
-                plot_bgcolor="#161b22",
                 showlegend=False,
                 margin=dict(l=10, r=10, t=40, b=10),
                 height=320,
@@ -485,28 +464,28 @@ with tab_data:
 
 with tab_how:
     st.markdown("""
-### 🧠 How HeartGuard AI Works
+### How HeartGuard AI Works
 
 HeartGuard AI uses three powerful ensemble machine-learning models trained on the **UCI Heart Disease Dataset** (Cleveland), which contains 303 patient records with 13 clinical features.
 
 ---
 
-#### 🌳 Random Forest
+#### Random Forest
 A **bagging** ensemble of hundreds of decision trees. Each tree is trained on a random bootstrap sample of the data with a random subset of features. Predictions are made by majority vote. Random Forest is robust to overfitting and provides stable probability estimates.
 
 ---
 
-#### 🚀 Gradient Boosting
+#### Gradient Boosting
 A **sequential boosting** method that builds trees one at a time, where each new tree corrects the errors of all previous trees. It minimises a differentiable loss function using gradient descent in function space, making it highly accurate on structured/tabular data.
 
 ---
 
-#### ⚡ XGBoost (Extreme Gradient Boosting)
+#### XGBoost (Extreme Gradient Boosting)
 An **optimised implementation** of gradient boosting with regularisation (L1 & L2), parallel tree construction, and hardware optimisations. XGBoost consistently achieves state-of-the-art results on tabular datasets and is the method of choice in many Kaggle competitions.
 
 ---
 
-#### 🔄 Pipeline
+#### Pipeline
 1. Raw input features are collected from the form.
 2. Features are **standardised** using a pre-fitted `StandardScaler` (zero mean, unit variance).
 3. The scaled features are passed to the selected model.
@@ -515,7 +494,7 @@ An **optimised implementation** of gradient boosting with regularisation (L1 & L
 
 ---
 
-#### 📐 Features Used
+#### Features Used
 | Feature | Description |
 |---------|-------------|
 | age | Age in years |
@@ -535,9 +514,9 @@ An **optimised implementation** of gradient boosting with regularisation (L1 & L
 
 with tab_disclaimer:
     st.markdown("""
-### 📋 Medical Disclaimer
+### Medical Disclaimer
 
-> **⚠️ IMPORTANT: This application is for educational and research purposes ONLY.**
+> **IMPORTANT: This application is for educational and research purposes ONLY.**
 
 ---
 
@@ -545,21 +524,21 @@ with tab_disclaimer:
 
 #### Key Points:
 
-- 🏥 **Not a Diagnostic Tool** — This application uses machine learning models trained on a limited dataset and **cannot replace** clinical diagnosis by a qualified healthcare professional.
+- **Not a Diagnostic Tool** — This application uses machine learning models trained on a limited dataset and **cannot replace** clinical diagnosis by a qualified healthcare professional.
 
-- 📊 **Dataset Limitations** — The models were trained on the UCI Cleveland Heart Disease Dataset (303 records). Performance may vary significantly on real-world populations and may not generalise to all demographic groups.
+- **Dataset Limitations** — The models were trained on the UCI Cleveland Heart Disease Dataset (303 records). Performance may vary significantly on real-world populations and may not generalise to all demographic groups.
 
-- 🔬 **No Medical Validation** — These models have not undergone clinical trials or regulatory approval (FDA, CE, etc.) required for medical devices.
+- **No Medical Validation** — These models have not undergone clinical trials or regulatory approval (FDA, CE, etc.) required for medical devices.
 
-- 👨‍⚕️ **Consult a Doctor** — If you are concerned about heart disease or any other medical condition, **please consult a licensed physician** or cardiologist immediately.
+- **Consult a Doctor** — If you are concerned about heart disease or any other medical condition, **please consult a licensed physician** or cardiologist immediately.
 
-- 🔒 **Data Privacy** — Do not enter real patient data into this application without ensuring appropriate consent and data governance compliance.
+- **Data Privacy** — Do not enter real patient data into this application without ensuring appropriate consent and data governance compliance.
 
-- ⚖️ **Liability** — The developers of this application assume no liability for decisions made based on its output.
+- **Liability** — The developers of this application assume no liability for decisions made based on its output.
 
 ---
 
 *By using this application, you acknowledge that you have read and understood this disclaimer.*
 
-**Emergency?** If you are experiencing symptoms of a heart attack (chest pain, shortness of breath, arm/jaw pain), call emergency services immediately: **🆘 911 (US) | 999 (UK) | 112 (EU)**
+**Emergency?** If you are experiencing symptoms of a heart attack (chest pain, shortness of breath, arm/jaw pain), call emergency services immediately: **911 (US) | 999 (UK) | 112 (EU)**
     """)
